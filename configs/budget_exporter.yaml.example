@@ -1,0 +1,10 @@
+core:
+  log:
+    level: INFO
+    path: ./logs/metabot.log
+
+web:
+  listen: :8080
+
+scrape:
+  interval: 1m
