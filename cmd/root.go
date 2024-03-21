@@ -18,12 +18,13 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"os/signal"
-	"syscall"
+	"time"
 
-	"github.com/atompi/budget_exporter/pkg/handle"
 	"github.com/atompi/budget_exporter/pkg/options"
+	"github.com/atompi/budget_exporter/pkg/router"
 	logkit "github.com/atompi/go-kits/log"
+	ginzap "github.com/gin-contrib/zap"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -49,10 +50,16 @@ var rootCmd = &cobra.Command{
 		undo := zap.ReplaceGlobals(logger)
 		defer undo()
 
-		sig := make(chan os.Signal, 1)
-		signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
-		handle.Handle(opts)
-		<-sig
+		gin.SetMode(opts.Core.Mode)
+
+		r := gin.New()
+
+		r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
+		r.Use(ginzap.RecoveryWithZap(logger, true))
+
+		router.Register(r, opts)
+
+		r.Run(opts.Web.Listen)
 	},
 }
 
@@ -72,11 +79,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.budget_exporter.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ./budget_exporter.yaml)")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -85,14 +88,10 @@ func initConfig() {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
-		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
-
 		// Search config in home directory with name ".budget_exporter" (without extension).
-		viper.AddConfigPath(home)
+		viper.AddConfigPath("./")
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".budget_exporter")
+		viper.SetConfigName("budget_exporter")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
@@ -100,5 +99,7 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	} else {
+		cobra.CheckErr(err)
 	}
 }

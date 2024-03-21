@@ -16,14 +16,18 @@ type LogOptions struct {
 
 type WebOptions struct {
 	Listen string `yaml:"listen"`
+	Path   string `yaml:"path"`
 }
 
 type ScrapeOptions struct {
-	Interval string `yaml:"interval"`
+	Interval int    `yaml:"interval"`
+	Type     string `yaml:"type"`
+	Address  string `yaml:"address"`
 }
 
 type CoreOptions struct {
-	Log LogOptions `yaml:"log"`
+	Mode string     `yaml:"mode"`
+	Log  LogOptions `yaml:"log"`
 }
 type Options struct {
 	Core   CoreOptions   `yaml:"core"`

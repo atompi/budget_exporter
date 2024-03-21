@@ -1,10 +1,14 @@
 core:
+  mode: release
   log:
     level: INFO
     path: ./logs/metabot.log
 
 web:
-  listen: :8080
+  listen: :9901
+  path: /metrics
 
 scrape:
-  interval: 1m
+  interval: 60
+  type: csv
+  address: ./data/budget.csv
