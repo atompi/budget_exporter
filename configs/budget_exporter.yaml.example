@@ -2,7 +2,7 @@ core:
   mode: release
   log:
     level: INFO
-    path: ./logs/metabot.log
+    path: ./logs/budget_exporter.log
 
 web:
   listen: :9901
