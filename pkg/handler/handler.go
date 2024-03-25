@@ -36,6 +36,7 @@ func MetricsHandler(opts options.ScrapeOptions) gin.HandlerFunc {
 			records, err := getCSV(opts.Address)
 			if err != nil {
 				zap.L().Sugar().Errorf("get csv records failed: %v", err)
+				time.Sleep(time.Duration(60) * time.Second)
 				continue
 			}
 			for _, record := range *records {
