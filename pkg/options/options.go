@@ -19,10 +19,20 @@ type WebOptions struct {
 	Path   string `yaml:"path"`
 }
 
+type LabelHeaderOptions struct {
+	Business  string `yaml:"business"`
+	Provider  string `yaml:"provider"`
+	Total     string `yaml:"total"`
+	Based     string `yaml:"based"`
+	Increased string `yaml:"increased"`
+	Left      string `yaml:"left"`
+}
+
 type ScrapeOptions struct {
-	Interval int    `yaml:"interval"`
-	Type     string `yaml:"type"`
-	Address  string `yaml:"address"`
+	Interval    int                `yaml:"interval"`
+	Type        string             `yaml:"type"`
+	Address     string             `yaml:"address"`
+	LabelHeader LabelHeaderOptions `yaml:"label_header"`
 }
 
 type CoreOptions struct {

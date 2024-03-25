@@ -1,4 +1,5 @@
-budget_exporter
-budget_exporter.yaml
-logs/
-data/
+/budget_exporter
+/budget_exporter.yaml
+/deploy/compose/budget_exporter.yaml
+/logs/
+/data/

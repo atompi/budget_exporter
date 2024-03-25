@@ -39,24 +39,24 @@ func MetricsHandler(opts options.ScrapeOptions) gin.HandlerFunc {
 				continue
 			}
 			for _, record := range *records {
-				business := record["系统名称"]
-				provider := record["预算所在地"]
-				total, err := strconv.ParseFloat(record["年总预算"], 64)
+				business := record[opts.LabelHeader.Business]
+				provider := record[opts.LabelHeader.Provider]
+				total, err := strconv.ParseFloat(record[opts.LabelHeader.Total], 64)
 				if err != nil {
 					zap.L().Sugar().Errorf("parse total failed: %v", err)
 					continue
 				}
-				based, err := strconv.ParseFloat(record["基础消费"], 64)
+				based, err := strconv.ParseFloat(record[opts.LabelHeader.Based], 64)
 				if err != nil {
 					zap.L().Sugar().Errorf("parse based failed: %v", err)
 					continue
 				}
-				increased, err := strconv.ParseFloat(record["新增消费"], 64)
+				increased, err := strconv.ParseFloat(record[opts.LabelHeader.Increased], 64)
 				if err != nil {
 					zap.L().Sugar().Errorf("parse increased failed: %v", err)
 					continue
 				}
-				left, err := strconv.ParseFloat(record["预算余额"], 64)
+				left, err := strconv.ParseFloat(record[opts.LabelHeader.Left], 64)
 				if err != nil {
 					zap.L().Sugar().Errorf("parse left failed: %v", err)
 					continue

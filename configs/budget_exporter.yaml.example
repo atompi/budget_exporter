@@ -12,3 +12,10 @@ scrape:
   interval: 60
   type: csv
   address: ./data/budget.csv
+  label_header:
+    business: 系统名称
+    provider: 预算所在地
+    total: 年总预算
+    based: 基础消费
+    increased: 新增消费
+    left: 预算余额

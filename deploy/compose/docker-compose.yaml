@@ -1,0 +1,12 @@
+---
+version: '3.9'
+
+services:
+  budget-exporter:
+    image: atompi/budget_exporter:v0.0.1
+    restart: unless-stopped
+    volumes:
+      - ./budget_exporter.yaml:/app/budget_exporter.yaml
+      - ./data:/app/data
+    ports:
+      - 9901:9901
